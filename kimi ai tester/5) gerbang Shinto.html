@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Digital Glitch Gate</title>
+<style>
+    html,body{margin:0;height:100%;overflow:hidden;background:#000}
+    canvas{position:absolute;top:0;left:0}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<script>
+const c=document.getElementById('c');
+const x=c.getContext('2d');
+let W=c.width=innerWidth;
+let H=c.height=innerHeight;
+
+const colors=['#00FFFF','#39FF14','#FF00FF','#FFFF00','#FF073A'];
+
+function glitchGate(){
+    x.fillStyle='rgba(0,0,0,0.2)';
+    x.fillRect(0,0,W,H);
+
+    /* Torii siluet */
+    const cx=W/2,cy=H/2,s=Math.min(W,H)/3;
+    x.strokeStyle='white';
+    x.lineWidth=3;
+    x.beginPath();
+    x.moveTo(cx-s,cy+s);
+    x.lineTo(cx-s,cy-s/1.5);
+    x.lineTo(cx+s,cy-s/1.5);
+    x.lineTo(cx+s,cy+s);
+    x.moveTo(cx-s*1.2,cy+s);
+    x.lineTo(cx+s*1.2,cy+s);
+    x.moveTo(cx,cy-s/1.5);
+    x.lineTo(cx,cy+s);
+    x.stroke();
+
+    /* Glitch bars */
+    for(let i=0;i<6;i++){
+        const clr=colors[Math.floor(Math.random()*colors.length)];
+        x.fillStyle=clr;
+        const barW=Math.random()*W;
+        const barH=Math.random()*8+2;
+        const barY=Math.random()*H;
+        x.fillRect(Math.random()*W,barY,barW,barH);
+    }
+
+    /* Scanline */
+    x.fillStyle='rgba(0,255,255,0.05)';
+    const scanY=(Date.now()/20)%H;
+    x.fillRect(0,scanY,W,2);
+
+    requestAnimationFrame(glitchGate);
+}
+glitchGate();
+
+window.addEventListener('resize',()=>{
+    W=c.width=innerWidth;
+    H=c.height=innerHeight;
+});
+</script>
+</body>
+</html>
