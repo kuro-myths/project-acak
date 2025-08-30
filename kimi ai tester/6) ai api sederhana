@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<title>ChatBot API - GPT / Gemini</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+:root{--p:#0ea5e9;--bg:#f4f6f8}
+*{box-sizing:border-box;font-family:system-ui}
+body{margin:0;display:flex;flex-direction:column;height:100vh;background:var(--bg)}
+header{background:var(--p);color:#fff;padding:.6rem;font-size:1rem;font-weight:600}
+#chat{flex:1;overflow-y:auto;padding:.5rem;display:flex;flex-direction:column;gap:.3rem}
+.msg{max-width:75%;padding:.5rem .8rem;border-radius:.8rem;font-size:.85rem;white-space:pre-wrap}
+.user{align-self:flex-end;background:var(--p);color:#fff}
+.bot{align-self:flex-start;background:#fff;border:1px solid #ddd}
+#form{display:flex;border-top:1px solid #ddd;background:#fff}
+#input{flex:1;border:none;padding:.6rem;font-size:.9rem;outline:none}
+button{background:var(--p);color:#fff;border:none;padding:0 1rem;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+</style>
+</head>
+<body>
+<header>ChatBot API (GPT / Gemini)</header>
+<div id="chat"></div>
+<form id="form">
+  <input id="input" placeholder="Ketik pesan…" autocomplete="off"/>
+  <button>➤</button>
+</form>
+
+<script>
+/* ---------- CONFIG ---------- */
+const USE_GEMINI = false;          // true = Gemini, false = OpenAI GPT
+const API_KEY    = 'YOUR_API_KEY_HERE';   // <- isi key Anda
+/* ---------- jangan ubah di bawah ini ---------- */
+
+const ENDPOINT = USE_GEMINI
+ ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`
+ : 'https://api.openai.com/v1/chat/completions';
+
+HEADER CONST = USE_GEMINI
+ ? { 'Content-Type':'aplikasi/json' }
+ : { 'Content-Type':'application/json', 'Authorization':`Bearer ${API_KEY}` };
+
+/* ---------- DOM ---------- */
+const chat = document.getElementById('chat');
+const form = document.getElementById('form');
+const input = document.getElementById('input');
+
+const addMsg = (txt,who='bot') => {
+ const m=document.createElement('div');
+ m.className='msg '+siapa;
+ m.textContent=txt;
+ chat.appendChild(m);
+ chat.scrollTop=chat.scrollTinggi;
+};
+
+/* ---------- API ---------- */
+async function callAI(messages){
+ const payload = USE_GEMINI
+ ? { isi:[{ bagian:[{ teks:pesan.at(-1).isi }] }] }
+ : { model:'gpt-3.5-turbo', messages, temperatur:.7 };
+
+ const res = await fetch(ENDPOINT, {
+ metode:'POS',
+ header:HEADER,
+ badan:JSON.stringify(payload)
+ });
+ const data = await res.json();
+ jika(!res.ok) throw new Error(JSON.stringify(data));
+
+ kembaliKAN USE_GEMINI
+ ? data.kandidat[0].content.parts[0].text
+ : data.choices[0].message.content.trim();
+}
+
+/* ---------- OBROLAN ---------- */
+form.addEventListener('submit', async e=>{
+ e.preventDefault();
+ teks const = input.value.trim();
+ jika(!teks) kembali;
+ addMsg(text,'user');
+ masuk.value='';
+ input.fokus();
+
+ coba {
+ const reply = await callAI([
+ { role:'system', content:'Anda adalah asisten belajar yang ramah, jawab dalam bahasa Indonesia.' },
+ { peran:'pengguna', konten:teks }
+ ]);
+ addMsg(reply,'bot');
+ } tangkap(err){
+ addMsg('❌ '+err.message,'bot');
+  }
+});
+</skrip>
+</badan>
+</html>
