@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Matrix Digital Rain</title>
+<style>
+    html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#0f0;font-family:monospace}
+    canvas{position:absolute;top:0;left:0}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+let w = c.width = innerWidth;
+let h = c.height = innerHeight;
+
+const fontSize = 14;
+const cols = Math.floor(w / fontSize);
+const drops = Array(cols).fill(1);
+
+function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0,0,w,h);
+
+    ctx.fillStyle = '#0f0';
+    ctx.font = fontSize + 'px monospace';
+
+    for(let i=0;i<drops.length;i++){
+        const text = String.fromCharCode(0x30A0 + Math.random()*96|0);
+        const x = i*fontSize;
+        const y = drops[i]*fontSize;
+
+        ctx.fillText(text,x,y);
+
+        if(y > h && Math.random() > 0.975){
+            drops[i] = 0;
+        }
+        drops[i]++;
+    }
+}
+
+setInterval(draw,33);
+
+window.addEventListener('resize',()=>{
+    w = c.width = innerWidth;
+    h = c.height = innerHeight;
+    drops.length = Math.floor(w / fontSize);
+    drops.fill(1);
+});
+</script>
+</body>
+</html>
