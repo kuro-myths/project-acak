@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Keren Mini-Gallery 3D</title>
+<style>
+    /* Reset & body */
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+        height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:linear-gradient(135deg,#0f0f23 0%,#202040 100%);
+        font-family:'Segoe UI',Arial,Helvetica,sans-serif;
+        color:#fff;
+        overflow:hidden;
+    }
+
+    /* Stage 3D */
+    .stage{
+        perspective:1000px;
+        width:200px;
+        height:200px;
+        position:relative;
+    }
+    .carousel{
+        width:100%;
+        height:100%;
+        position:absolute;
+        transform-style:preserve-3d;
+        animation:spin 10s infinite linear;
+    }
+
+    /* Setiap slide */
+    .slide{
+        position:absolute;
+        width:140px;
+        height:140px;
+        left:30px;
+        top:30px;
+        background:rgba(255,255,255,.1);
+        border:2px solid #0ff;
+        border-radius:12px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:2rem;
+        box-shadow:0 0 15px #0ff;
+    }
+    /* Posisi 6 slide pada kubus */
+    .slide:nth-child(1){transform:rotateY(0deg)   translateZ(100px)}
+    .slide:nth-child(2){transform:rotateY(60deg)  translateZ(100px)}
+    .slide:nth-child(3){transform:rotateY(120deg) translateZ(100px)}
+    .slide:nth-child(4){transform:rotateY(180deg) translateZ(100px)}
+    .slide:nth-child(5){transform:rotateY(240deg) translateZ(100px)}
+    .slide:nth-child(6){transform:rotateY(300deg) translateZ(100px)}
+
+    /* Animasi putar */
+    @keyframes spin{
+        from{transform:rotateY(0deg)}
+        to{transform:rotateY(360deg)}
+    }
+
+    /* Hover pause */
+    .stage:hover .carousel{animation-play-state:paused}
+
+    /* Teks judul */
+    h1{
+        position:absolute;
+        top:30px;
+        font-size:2rem;
+        letter-spacing:4px;
+        text-shadow:0 0 10px #0ff;
+    }
+</style>
+</head>
+<body>
+
+<h1>KEREN 3D</h1>
+
+<div class="stage">
+    <div class="carousel">
+        <div class="slide">😎</div>
+        <div class="slide">🔥</div>
+        <div class="slide">⚡</div>
+        <div class="slide">🚀</div>
+        <div class="slide">✨</div>
+        <div class="slide">🌀</div>
+    </div>
+</div>
+
+<script>
+/* Efek mouse-move: miringkan kubus sedikit */
+const stage = document.querySelector('.stage');
+window.addEventListener('mousemove', e=>{
+    const x = (e.clientY / innerHeight - 0.5) * -20;
+    const y = (e.clientX / innerWidth  - 0.5) *  20;
+    stage.style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
+});
+</script>
+
+</body>
+</html>
